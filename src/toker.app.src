@@ -1,0 +1,12 @@
+{application, toker,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { toker_app, []}},
+  {env, []}
+ ]}.
