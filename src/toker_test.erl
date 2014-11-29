@@ -1,8 +1,9 @@
+%% @private
 -module(toker_test).
 
 -export([double/1, i2l/1]).
 
--toker_parse(toker_erl_parse).
+-toker_parser(toker_erl_parse).
 
 double(L) ->
     lists:map(`(X) -> X*2`, L).

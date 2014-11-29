@@ -15,7 +15,8 @@ bootstrap_toker() ->
 	true ->
 	    ok;
 	false ->
-	    toker_c:transform_epp()
+	    %% transform_epp()
+	    transform_erl_parse()
     end,
     ensure_started().
 
@@ -42,6 +43,7 @@ transform_parse_erl_form(Forms, _Opts) ->
 		     try
 			 case epp:epp_request(Epp, scan_erl_form) of
 			     {ok,Toks} ->
+				 _ = ?MODULE:maybe_reset(Toks),
 				 Mod = ?MODULE:get_parse_module(Toks),
 				 Mod:parse_form(Toks);
 			     Other ->
@@ -54,6 +56,37 @@ transform_parse_erl_form(Forms, _Opts) ->
 		     end
 	     end),
     parse_trans:replace_function(parse_erl_form, 1, NewF, Forms).
+
+transform_erl_parse() ->
+    parse_trans_mod:transform_module(
+      erl_parse, [fun transform_parse_form/2], [report_errors,
+						report_warnings]).
+
+transform_parse_form(Forms, _Opts) ->
+    NewF = codegen:gen_function(
+	     parse_form,
+	     fun(Toks) ->
+		     try
+			 _ = ?MODULE:maybe_reset(Toks),
+			 TMod = ?MODULE:get_token_transform(Toks),
+			 Toks1 = TMod:transform_tokens(Toks),
+			 case ?MODULE:get_parse_module(Toks1) of
+			     erl_parse ->
+				 erl_parse:orig_parse_form(Toks1);
+			     Mod ->
+				 Mod:parse_form(Toks1);
+			     Other ->
+				 Other
+			 end
+		     catch
+			 error:E -> io:fwrite("!!! ~p:~p~n~p~n",
+					      [error,E, erlang:get_stacktrace()]),
+				    erlang:error(E)
+		     end
+	     end),
+    parse_trans:replace_function(parse_form, 1, NewF, Forms,
+				 [{rename_original, orig_parse_form}]).
+
 
 transform_tokens(T) ->
     T.
@@ -68,12 +101,20 @@ get_token_transform(Tokens) ->
     end.
 
 get_parse_module(Tokens) ->
-    case get_attr(toker_parse, Tokens) of
+    case get_attr(toker_parser, Tokens) of
 	undefined ->
 	    toker_server:parser();
 	P ->
 	    toker_server:parser(P),
 	    P
+    end.
+
+maybe_reset(Tokens) ->
+    case get_attr(toker_reset, Tokens) of
+	parser          -> toker_server:reset(parser);
+	token_transform -> toker_server:reset(token_transform);
+	all             -> toker_server:reset(all);
+	undefined       -> ok
     end.
 
 get_attr(K, [{'-',_},{atom,_,K},

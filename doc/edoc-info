@@ -1,0 +1,5 @@
+%% encoding: UTF-8
+{application,toker}.
+{packages,[]}.
+{modules,[toker,toker_app,toker_bootstrap,toker_c,toker_erl_parse,toker_pt,
+          toker_server,toker_sup]}.

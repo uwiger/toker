@@ -2,7 +2,7 @@
 
 -behaviour(gen_server).
 
--export([parser/0, parser/1,
+-export([parser/0, parser/1, reset/1,
 	 token_transform/0, token_transform/1]).
 
 -export([start/0,
@@ -29,6 +29,9 @@ parser(P) -> gen_server:call(?MODULE, {parser, P}).
 token_transform()  -> gen_server:call(?MODULE, token_transform).
 token_transform(T) -> gen_server:call(?MODULE, {token_transform, T}).
 
+reset(C) when C==parser; C==token_transform; C==all ->
+    gen_server:call({reset, C}).
+
 init(_) ->
     _ = toker_c:bootstrap_toker(),
     {ok, #st{}}.
@@ -52,6 +55,21 @@ handle_call({token_transform, T}, {Pid,_}, #st{token_transformers = Ts,
 					       monitors = Ms} = St) ->
     Ms1 = ensure_monitor(Pid, Ms),
     {reply, ok, St#st{token_transformers = lists:keystore(Pid, 1, Ts, {Pid, T}),
+		      monitors = Ms1}};
+handle_call({reset, C}, {Pid,_}, #st{parsers = Ps,
+				     token_transformers = Ts,
+				     monitors = Ms} = St) ->
+    {Ps1, Ts1, Ms1} = case C of
+			  parser ->
+			      {lists:keydelete(Pid,1,Ps),Ts,Ms};
+			  token_transform ->
+			      {Ps, lists:keydelete(Pid,1,Ts), Ms};
+			  all ->
+			      {lists:keydelete(Pid,1,Ps),
+			       lists:keydelete(Pid,1,Ts),
+			       lists:keydelete(Pid,2,Ms)}
+		      end,
+    {reply, ok, St#st{parsers = Ps1, token_transformers = Ts1,
 		      monitors = Ms1}};
 handle_call(_, _, St) ->
     {reply, error, St}.
