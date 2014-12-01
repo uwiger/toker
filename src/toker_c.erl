@@ -62,6 +62,9 @@ transform_erl_parse() ->
       erl_parse, [fun transform_parse_form/2], [report_errors,
 						report_warnings]).
 
+restore() ->
+    c:l(erl_parse).
+
 transform_parse_form(Forms, _Opts) ->
     NewF = codegen:gen_function(
 	     parse_form,
@@ -87,7 +90,7 @@ transform_parse_form(Forms, _Opts) ->
     parse_trans:replace_function(parse_form, 1, NewF, Forms,
 				 [{rename_original, orig_parse_form}]).
 
-
+%% @doc Unit token transform. Returns tokens unmodified.
 transform_tokens(T) ->
     T.
 

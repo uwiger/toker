@@ -1,4 +1,4 @@
-.PHONY: compile deps all doc clean halfclean
+.PHONY: compile deps all doc test clean halfclean
 
 deps:
 	rebar get-deps
@@ -10,6 +10,9 @@ all: compile
 
 doc: halfclean
 	rebar get-deps compile doc
+
+test: compile
+	rebar eunit skip_deps=true
 
 clean:
 	rebar clean

@@ -10,7 +10,7 @@ __Behaviours:__ [`gen_server`](gen_server.md).
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#code_change-3">code_change/3</a></td><td></td></tr><tr><td valign="top"><a href="#handle_call-3">handle_call/3</a></td><td></td></tr><tr><td valign="top"><a href="#handle_cast-2">handle_cast/2</a></td><td></td></tr><tr><td valign="top"><a href="#handle_info-2">handle_info/2</a></td><td></td></tr><tr><td valign="top"><a href="#init-1">init/1</a></td><td></td></tr><tr><td valign="top"><a href="#parser-0">parser/0</a></td><td></td></tr><tr><td valign="top"><a href="#parser-1">parser/1</a></td><td></td></tr><tr><td valign="top"><a href="#reset-1">reset/1</a></td><td></td></tr><tr><td valign="top"><a href="#start-0">start/0</a></td><td></td></tr><tr><td valign="top"><a href="#start_link-0">start_link/0</a></td><td></td></tr><tr><td valign="top"><a href="#terminate-2">terminate/2</a></td><td></td></tr><tr><td valign="top"><a href="#token_transform-0">token_transform/0</a></td><td></td></tr><tr><td valign="top"><a href="#token_transform-1">token_transform/1</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#code_change-3">code_change/3</a></td><td></td></tr><tr><td valign="top"><a href="#handle_call-3">handle_call/3</a></td><td></td></tr><tr><td valign="top"><a href="#handle_cast-2">handle_cast/2</a></td><td></td></tr><tr><td valign="top"><a href="#handle_info-2">handle_info/2</a></td><td></td></tr><tr><td valign="top"><a href="#init-1">init/1</a></td><td></td></tr><tr><td valign="top"><a href="#lookup-1">lookup/1</a></td><td></td></tr><tr><td valign="top"><a href="#parser-0">parser/0</a></td><td></td></tr><tr><td valign="top"><a href="#parser-1">parser/1</a></td><td></td></tr><tr><td valign="top"><a href="#reset-1">reset/1</a></td><td></td></tr><tr><td valign="top"><a href="#start-0">start/0</a></td><td></td></tr><tr><td valign="top"><a href="#start_link-0">start_link/0</a></td><td></td></tr><tr><td valign="top"><a href="#stop-0">stop/0</a></td><td></td></tr><tr><td valign="top"><a href="#store-2">store/2</a></td><td></td></tr><tr><td valign="top"><a href="#terminate-2">terminate/2</a></td><td></td></tr><tr><td valign="top"><a href="#token_transform-0">token_transform/0</a></td><td></td></tr><tr><td valign="top"><a href="#token_transform-1">token_transform/1</a></td><td></td></tr></table>
 
 
 <a name="functions"></a>
@@ -28,7 +28,7 @@ __Behaviours:__ [`gen_server`](gen_server.md).
 
 ### handle_call/3 ###
 
-`handle_call(X1, X2, St) -> any()`
+`handle_call(X1, From, St) -> any()`
 
 
 <a name="handle_cast-2"></a>
@@ -50,6 +50,17 @@ __Behaviours:__ [`gen_server`](gen_server.md).
 ### init/1 ###
 
 `init(X1) -> any()`
+
+
+<a name="lookup-1"></a>
+
+### lookup/1 ###
+
+
+<pre><code>
+lookup(K::any()) -&gt; any() | undefined
+</code></pre>
+<br />
 
 
 <a name="parser-0"></a>
@@ -85,6 +96,24 @@ __Behaviours:__ [`gen_server`](gen_server.md).
 ### start_link/0 ###
 
 `start_link() -> any()`
+
+
+<a name="stop-0"></a>
+
+### stop/0 ###
+
+`stop() -> any()`
+
+
+<a name="store-2"></a>
+
+### store/2 ###
+
+
+<pre><code>
+store(K::any(), V::any()) -&gt; ok
+</code></pre>
+<br />
 
 
 <a name="terminate-2"></a>

@@ -23,5 +23,6 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
+    toker_server:stop(),  % precaution
     {ok, { {one_for_one, 5, 10},
 	   [?CHILD(toker_server, worker)]} }.

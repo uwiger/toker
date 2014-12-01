@@ -69,6 +69,10 @@ Instructions recognized by toker are:
 * `-toker_reset(Type)' - where `Type' is either `parser', `token_transform' or
   `all', restores the relevant settings to the default.
 
+Note that a token transform must return a list of tokens corresponding to a
+valid Erlang form (possibly after being processed by another parser). The
+Erlang parser has no support for skipping a part of the token stream.
+
 <h2>The toker application</h2>
 
 The toker compiler patch can also be installed by starting the `toker'
@@ -114,6 +118,18 @@ Eshell V5.10.3  (abort with ^G)
 1&gt; toker_test:double([1,2,3]).
 [2,4,6]
 </pre>
+
+<h2>Rebar plugin</h2>
+
+A rebar plugin can be found in `toker/util/toker_rebar_plugin.erl'. It
+bootstraps the toker functionality in `pre_compile' and `pre_eunit' for
+any application that has toker in its 'deps' list.
+
+<h2>Examples</h2>
+
+Apart from the `src/toker_test.erl' module, the `examples/' directory
+contains examples of e.g. token transforms (implementing a very simple
+macro pre-processor in `tt1.erl', used by `m1.erl'.)
 
 <h2>TODO</h2>
 

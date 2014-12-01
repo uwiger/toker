@@ -13,4 +13,5 @@ start(_StartType, _StartArgs) ->
     toker_sup:start_link().
 
 stop(_State) ->
+    toker_c:restore(),
     ok.
